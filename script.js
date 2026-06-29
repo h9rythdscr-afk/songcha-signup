@@ -70,10 +70,7 @@ form.addEventListener("submit", async function (e) {
   const name = document.getElementById("name").value.trim();
   const phone = document.getElementById("phone").value.trim();
   const department = document.getElementById("department").value.trim();
-  const social_account = document.getElementById("social_account").value.trim();
-  const content_type = document.getElementById("content_type").value;
   const reason = document.getElementById("reason").value.trim();
-  const remark = document.getElementById("remark").value.trim();
 
   if (!/^1[3-9]\d{9}$/.test(phone)) {
     alert("请输入正确的手机号");
@@ -106,10 +103,7 @@ form.addEventListener("submit", async function (e) {
         name,
         phone,
         department,
-        social_account,
-        content_type,
         reason,
-        remark,
         people_count: 1,
         status: "已报名"
       }
