@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>夏日荷花茶饮套餐内测官后台</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+    background:#f4f5f7;
+}
+
+.admin{
+    max-width:1100px;
+    margin:40px auto;
+    background:#fff;
+    border-radius:18px;
+    padding:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.top h1{
+    margin:0;
+    font-size:30px;
+}
+
+.stats{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.card{
+    background:#eef6eb;
+    padding:14px 22px;
+    border-radius:12px;
+    font-weight:bold;
+}
+
+.search{
+    width:100%;
+    margin:20px 0;
+}
+
+.search input{
+    width:100%;
+    padding:14px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:16px;
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+margin-top:20px;
+
+}
+
+th{
+
+background:#2f6b1d;
+
+color:white;
+
+padding:12px;
+
+}
+
+td{
+
+padding:12px;
+
+border-bottom:1px solid #eee;
+
+text-align:center;
+
+font-size:14px;
+
+}
+
+button{
+
+background:#2f6b1d;
+
+color:white;
+
+border:none;
+
+padding:8px 16px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+button:hover{
+
+opacity:.9;
+
+}
+
+.export{
+
+margin-top:20px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="admin">
+
+<div class="top">
+
+<h1>报名管理后台</h1>
+
+<div class="stats">
+
+<div class="card">
+总报名：<span id="total">0</span>
+</div>
+
+<div class="card">
+剩余名额：<span id="left">10</span>
+</div>
+
+</div>
+
+</div>
+
+<div class="search">
+
+<input
+id="search"
+placeholder="输入姓名、手机号搜索">
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>姓名</th>
+
+<th>手机号</th>
+
+<th>部门</th>
+
+<th>账号</th>
+
+<th>形式</th>
+
+<th>报名理由</th>
+
+<th>备注</th>
+
+<th>报名时间</th>
+
+<th>操作</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody">
+
+</tbody>
+
+</table>
+
+<div class="export">
+
+<button id="exportBtn">
+导出CSV
+</button>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="config.js"></script>
+
+<script src="admin.js"></script>
+
+</body>
+</html>
