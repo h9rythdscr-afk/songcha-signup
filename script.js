@@ -1,49 +1,133 @@
-const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const form = document.getElementById('signupForm');
-const successBox = document.getElementById('successBox');
-const submitBtn = document.getElementById('submitBtn');
-const leftCount = document.getElementById('leftCount');
-const msg = document.getElementById('msg');
- 
-function isClosed(){ return new Date() > new Date(ACTIVITY_CONFIG.deadline); }
-function setMsg(text){ msg.textContent = text || ''; }
-async function getCount(){
-  const { count, error } = await client.from('signups').select('*', { count:'exact', head:true });
-  if(error){ console.error(error); leftCount.textContent='读取失败'; return 0; }
-  const left = Math.max(ACTIVITY_CONFIG.maxSeats - count, 0);
-  leftCount.textContent = left + ' 位';
-  if(left <= 0){ submitBtn.disabled=true; submitBtn.textContent='名额已满'; }
-  if(isClosed()){ submitBtn.disabled=true; submitBtn.textContent='报名已截止'; }
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const form = document.getElementById("signupForm");
+const successBox = document.getElementById("successBox");
+const submitBtn = document.getElementById("submitBtn");
+const leftCount = document.getElementById("leftCount");
+
+async function getSignupCount() {
+  const { data, error } = await db
+    .from("signups")
+    .select("id");
+
+  if (error) {
+    console.error(error);
+    leftCount.textContent = "加载失败";
+    return 0;
+  }
+
+  const count = data.length;
+  const left = MAX_SIGNUPS - count;
+
+  leftCount.textContent = left > 0 ? `${left} / ${MAX_SIGNUPS}` : "已满";
+
+  if (left <= 0) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "名额已满";
+  }
+
   return count;
 }
-async function phoneExists(phone){
-  const { data, error } = await client.from('signups').select('id').eq('phone', phone).limit(1);
-  if(error) throw error;
-  return data && data.length > 0;
+
+function checkDeadline() {
+  const now = new Date();
+  const deadline = new Date(DEADLINE);
+
+  if (now > deadline) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "报名已截止";
+    return false;
+  }
+
+  return true;
 }
-function phoneValid(phone){ return /^1[3-9]\d{9}$/.test(phone); }
- 
-form.addEventListener('submit', async (e)=>{
-  e.preventDefault(); setMsg(''); submitBtn.disabled=true; submitBtn.textContent='提交中...';
-  try{
-    if(isClosed()) throw new Error('报名已截止');
-    const currentCount = await getCount();
-    if(currentCount >= ACTIVITY_CONFIG.maxSeats) throw new Error('名额已满，感谢关注');
-    const payload = {
-      name: document.getElementById('name').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
-      department: document.getElementById('department').value.trim(),
-      social_account: document.getElementById('social_account').value.trim(),
-      content_type: document.getElementById('content_type').value,
-      reason: document.getElementById('reason').value.trim(),
-      remark: document.getElementById('remark').value.trim(),
-      people_count: 1
-    };
-    if(!phoneValid(payload.phone)) throw new Error('请填写正确的手机号');
-    if(await phoneExists(payload.phone)) throw new Error('该手机号已报名，请勿重复提交');
-    const { error } = await client.from('signups').insert([payload]);
-    if(error) throw error;
-    form.classList.add('hidden'); successBox.classList.remove('hidden'); await getCount();
-  }catch(err){ setMsg(err.message || '提交失败，请稍后再试'); submitBtn.disabled=false; submitBtn.textContent='提交报名'; }
+
+async function checkDuplicatePhone(phone) {
+  const { data, error } = await db
+    .from("signups")
+    .select("id")
+    .eq("phone", phone);
+
+  if (error) {
+    console.error(error);
+    return false;
+  }
+
+  return data.length > 0;
+}
+
+form.addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  if (!checkDeadline()) {
+    alert("报名已截止");
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "提交中...";
+
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const department = document.getElementById("department").value.trim();
+  const social_account = document.getElementById("social_account").value.trim();
+  const content_type = document.getElementById("content_type").value;
+  const reason = document.getElementById("reason").value.trim();
+  const remark = document.getElementById("remark").value.trim();
+
+  if (!/^1[3-9]\d{9}$/.test(phone)) {
+    alert("请输入正确的手机号");
+    submitBtn.disabled = false;
+    submitBtn.textContent = "提交报名";
+    return;
+  }
+
+  const currentCount = await getSignupCount();
+
+  if (currentCount >= MAX_SIGNUPS) {
+    alert("报名名额已满");
+    submitBtn.textContent = "名额已满";
+    return;
+  }
+
+  const isDuplicate = await checkDuplicatePhone(phone);
+
+  if (isDuplicate) {
+    alert("该手机号已报名，请勿重复提交");
+    submitBtn.disabled = false;
+    submitBtn.textContent = "提交报名";
+    return;
+  }
+
+  const { error } = await db
+    .from("signups")
+    .insert([
+      {
+        name,
+        phone,
+        department,
+        social_account,
+        content_type,
+        reason,
+        remark,
+        people_count: 1,
+        status: "已报名"
+      }
+    ]);
+
+  if (error) {
+    console.error(error);
+    alert("提交失败，请稍后再试");
+    submitBtn.disabled = false;
+    submitBtn.textContent = "提交报名";
+    return;
+  }
+
+  form.classList.add("hidden");
+  successBox.classList.remove("hidden");
+
+  await getSignupCount();
 });
-getCount();
+
+getSignupCount();
+checkDeadline();
