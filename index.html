@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>夏日荷花茶饮套餐内测官招募</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="badge">限额 10 位｜新品内测</div>
+      <h1>夏日荷花茶饮套餐<br>内测官招募</h1>
+      <p class="intro">
+        为打磨夏日新品口味、定价、视觉呈现与传播内容，现面向全体小伙伴招募新品内测官。
+      </p >
+    </section>
+
+    <section class="card">
+      <h2>招募要求</h2>
+      <ul>
+        <li>自有抖音 / 小红书个人账号，能够自主拍摄图文或短视频；</li>
+        <li>品鉴结束后，现场如实反馈测评体验，给出真实优化建议；</li>
+        <li>遵守时间安排，不临时缺席、不无故放鸽子。</li>
+      </ul>
+    </section>
+
+    <section class="card info">
+      <div><span>内测时间</span><strong>本周三 18:30</strong></div>
+      <div><span>内测地点</span><strong>迎恩颂茶</strong></div>
+      <div><span>报名截止</span><strong>周二 21:00</strong></div>
+      <div><span>剩余名额</span><strong id="leftCount">加载中...</strong></div>
+    </section>
+
+    <section class="card">
+      <h2>线上报名表</h2>
+
+      <form id="signupForm">
+        <input id="name" type="text" placeholder="姓名" required />
+        <input id="phone" type="tel" placeholder="手机号" required />
+        <input id="department" type="text" placeholder="部门 / 岗位，可不填" />
+
+        <input id="social_account" type="text" placeholder="抖音 / 小红书账号" required />
+
+        <select id="content_type" required>
+          <option value="">请选择擅长内容形式</option>
+          <option value="图文">图文</option>
+          <option value="短视频">短视频</option>
+          <option value="图文+短视频">图文 + 短视频</option>
+        </select>
+
+        <textarea id="reason" placeholder="报名理由 / 你能提供哪些测评反馈" required></textarea>
+        <textarea id="remark" placeholder="备注，可不填"></textarea>
+
+        <button type="submit" id="submitBtn">提交报名</button>
+      </form>
+
+      <div id="successBox" class="success hidden">
+        <h2>报名成功</h2>
+        <p>感谢报名，请准时参加夏日荷花茶饮套餐内测。</p >
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>
