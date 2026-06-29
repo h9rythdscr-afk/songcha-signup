@@ -37,7 +37,7 @@ function renderTable(data) {
   if (!data.length) {
     tableBody.innerHTML = `
       <tr>
-        <td colspan="9">暂无报名数据</td>
+        <td colspan="6">暂无报名数据</td>
       </tr>
     `;
     return;
@@ -50,10 +50,7 @@ function renderTable(data) {
           <td>${safe(item.name)}</td>
           <td>${safe(item.phone)}</td>
           <td>${safe(item.department)}</td>
-          <td>${safe(item.social_account)}</td>
-          <td>${safe(item.content_type)}</td>
           <td>${safe(item.reason)}</td>
-          <td>${safe(item.remark)}</td>
           <td>${formatTime(item.created_at)}</td>
           <td>
             <button onclick="deleteSignup(${item.id})">删除</button>
@@ -128,10 +125,7 @@ exportBtn.addEventListener("click", function () {
     "姓名",
     "手机号",
     "部门",
-    "账号",
-    "内容形式",
     "报名理由",
-    "备注",
     "报名时间"
   ];
 
@@ -139,10 +133,7 @@ exportBtn.addEventListener("click", function () {
     item.name || "",
     item.phone || "",
     item.department || "",
-    item.social_account || "",
-    item.content_type || "",
     item.reason || "",
-    item.remark || "",
     formatTime(item.created_at)
   ]);
 
